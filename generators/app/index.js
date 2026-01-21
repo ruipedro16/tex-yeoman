@@ -72,16 +72,11 @@ module.exports = class extends Generator {
       this.destinationPath("dummyfile.txt")
     );
 
-    this.fs.copy(
+    this.fs.copyTpl(
       this.templatePath("preamble.tex"),
-      this.destinationPath("preamble.tex")
+      this.destinationPath("preamble.tex"),
+      { babelLang: this.props.lang.toLowerCase() }
     );
-
-    // Set the language accordingly
-    const preamblePath = this.destinationPath("preamble.tex");
-    let content = fs.readFileSync(preamblePath, "utf8");
-    content = content.replace("BABEL_LANG", this.props.lang.toLowerCase());
-    fs.writeFileSync(preamblePath, content);
 
     fs.mkdirSync(this.destinationPath("img/"), { recursive: true });
 
@@ -96,17 +91,14 @@ module.exports = class extends Generator {
       fs.mkdirSync(this.destinationPath("chapters/"), { recursive: true });
     }
 
-    this.fs.copy(
+    this.fs.copyTpl(
       this.templatePath("main.tex"),
-      this.destinationPath("main.tex")
+      this.destinationPath("main.tex"),
+      {
+        documentClass: this.props.documentClass.toLowerCase(),
+        title: this.props.title
+      }
     );
-
-    let mainPath = this.destinationPath("main.tex");
-    let mainContent = fs.readFileSync(mainPath, "utf8");
-    mainContent = mainContent
-      .replace("DOCUMENT_CLASS", this.props.documentClass.toLowerCase())
-      .replace("PLACEHOLDER_TITLE", this.props.title);
-    fs.writeFileSync(mainPath, mainContent);
 
     // F: if (this.props.subtitle) { }
 
@@ -123,10 +115,5 @@ module.exports = class extends Generator {
         this.destinationPath(".gitignore")
       );
     }
-
-    this.fs.copy(
-      this.templatePath("preamble.tex"),
-      this.destinationPath("preamble.tex")
-    );
   }
 };
