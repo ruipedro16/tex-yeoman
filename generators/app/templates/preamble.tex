@@ -1,0 +1,114 @@
+\usepackage[utf8]{inputenc}
+\usepackage[BABEL_LANG]{babel}
+\usepackage{ifthen}
+\usepackage{hyperref}
+\usepackage{a4wide}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[table, dvipsnames]{xcolor}
+\usepackage{amsmath}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{todonotes}
+\usepackage[capitalise, noabbrev]{cleveref}
+\usepackage[bottom]{footmisc}
+\usepackage{booktabs}
+\usepackage[normalem]{ulem}
+\usepackage{pdflscape}
+\usepackage{courier}
+\usepackage{soul}
+\usepackage{xspace}
+\usepackage[most]{tcolorbox}
+\usepackage{csquotes} % for \enquote
+\usepackage{url}
+\usepackage{listings}
+\usepackage{mfirstuc} % for \capitalisewords
+\usepackage{titling} % for \thetitle and \theauthor
+
+
+\interfootnotelinepenalty=10000
+\hyphenpenalty=10000
+\onehalfspacing
+
+\hypersetup{
+    pdftitle={\thetitle},
+    pdfauthor={\theauthor},
+    bookmarksnumbered=true,
+    plainpages=false,
+    pdfpagelabels=false,
+    pdfborder={0 0 0},
+    colorlinks,
+    breaklinks=true,
+    linkcolor=Sepia,
+    urlcolor=NavyBlue,
+    citecolor=Sepia,
+}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=tb,
+  numberstyle=\tiny\color{gray},
+  captionpos=b
+}
+
+\definecolor{airforceblue}{rgb}{.36, .54, .66}
+\definecolor{britishracinggreen}{rgb}{0, .26, .15}
+
+\newcommand{\red}[1]{%
+  {\textcolor{red}{#1}}%
+}
+
+\newcommand{\green}[1]{%
+  {\textcolor{britishracinggreen}{#1}}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\definecolor{note}{HTML}{0969da}
+\definecolor{tip}{HTML}{1a7f37}
+\definecolor{warning}{HTML}{9a6700}
+\definecolor{todo}{HTML}{d1242f}
+
+\newtcolorbox[auto counter,number within=section]{block}[1][note]{ % Default to the note color (blue)
+    enhanced jigsaw,
+    frame hidden,
+    colback=white,
+    coltitle=#1,
+    fonttitle=\bfseries\itshape,
+    sharp corners,
+    detach title,
+    borderline west={.85mm}{0pt}{#1},
+    pad at break=1mm,
+    title={\capitalisewords{#1}:},
+    code={\ifdefempty{\tcbtitletext}{}{\tcbset{before upper={\tcbtitle\par\medskip}}}}
+}
+
+% More flexible (can specify title and color)
+% First argument is color (optional)
+% Second argument is the title
+%
+%
+% \begin{bblock}[red]{Um título}
+% aaa
+% \end{bblock}
+%
+%
+\newtcolorbox[auto counter,number within=section]{bblock}[2][britishracinggreen]{ % Default color is britishracinggreen
+                                                                                  % No default title
+    enhanced jigsaw,
+    frame hidden,
+    colback=white,
+    coltitle=#1,
+    fonttitle=\bfseries\itshape,
+    sharp corners,
+    detach title,
+    borderline west={.85mm}{0pt}{#1},
+    pad at break=1mm,
+    title={\capitalisewords{#2}:},
+    code={\ifdefempty{\tcbtitletext}{}{\tcbset{before upper={\tcbtitle\par\medskip}}}}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

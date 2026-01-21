@@ -105,6 +105,16 @@ module.exports = class extends Generator {
         this.templatePath("ci.yml"),
         this.destinationPath(".github/workflows/ci.yml")
       );
+
+      this.fs.copy(
+        this.templatePath(".gitignore"),
+        this.destinationPath(".gitignore")
+      )
     }
+
+    this.fs.copy(
+      this.templatePath("preamble.tex"),
+      this.destinationPath("preamble.tex")
+    )
   }
 };
