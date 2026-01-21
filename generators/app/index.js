@@ -21,6 +21,13 @@ module.exports = class extends Generator {
         default: "article"
       },
       {
+        type: "list",
+        name: "documentClass",
+        message: "Language:",
+        choices: ["English", "Portuguese", "German"],
+        default: "English"
+      },
+      {
         type: "input",
         name: "title",
         message: "Title:",
