@@ -3,6 +3,8 @@ const Generator = require("yeoman-generator");
 const chalk = require("chalk");
 const yosay = require("yosay");
 
+const fs = require("fs");
+
 module.exports = class extends Generator {
   prompting() {
     // Have Yeoman greet the user.
@@ -20,6 +22,12 @@ module.exports = class extends Generator {
         name: "someAnswer",
         message: "Would you like to enable this option?",
         default: true
+      },
+      {
+        type: "confirm",
+        name: "acronymsAnswer",
+        message: "Would you like to setup acronyms?",
+        default: false
       }
     ];
 
@@ -34,9 +42,7 @@ module.exports = class extends Generator {
       this.templatePath("dummyfile.txt"),
       this.destinationPath("dummyfile.txt")
     );
-  }
 
-  install() {
-    this.installDependencies();
+    fs.mkdirSync(this.destinationPath("img"), { recursive: true });
   }
 };
