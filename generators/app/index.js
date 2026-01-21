@@ -9,24 +9,46 @@ module.exports = class extends Generator {
   prompting() {
     // Have Yeoman greet the user.
     this.log(
-      yosay(
-        `Welcome to the striking ${chalk.red(
-          "generator-tex-yeoman"
-        )} generator!`
-      )
+      yosay(`Welcome to the striking ${chalk.red("tex-yeoman")} generator!`)
     );
 
     const prompts = [
       {
-        type: "confirm",
-        name: "someAnswer",
-        message: "Would you like to enable this option?",
-        default: true
+        type: "list",
+        name: "documentClass",
+        message: "Document class:",
+        choices: ["article", "report", "book"],
+        default: "article"
+      },
+      {
+        type: "input",
+        name: "title",
+        message: "Title:",
+        default: "Title"
+      },
+      {
+        type: "input",
+        name: "subtitle",
+        message: "Subtitle:",
+        default: ""
       },
       {
         type: "confirm",
-        name: "acronymsAnswer",
+        name: "acronyms",
         message: "Would you like to setup acronyms?",
+        default: false
+      },
+      /* TODO: Setup refs.bib and cryptobib */
+      {
+        type: "confirm",
+        name: "ci",
+        message: "Would you like to setup CI (Github Actions)?",
+        default: false
+      },
+      {
+        type: "confirm",
+        name: "precommitHook",
+        message: "Would you like to setup precommit hooks?",
         default: false
       }
     ];
@@ -43,6 +65,19 @@ module.exports = class extends Generator {
       this.destinationPath("dummyfile.txt")
     );
 
-    fs.mkdirSync(this.destinationPath("img"), { recursive: true });
+    fs.mkdirSync(this.destinationPath("img/"), { recursive: true });
+
+    if (this.props.subtitle) {
+    }
+
+    if (this.props.acronyms) {
+    }
+
+    if (this.props.ci) {
+      this.fs.copy(
+        this.templatePath("ci.yml"),
+        this.destinationPath(".github/workflows/ci.yml")
+      );
+    }
   }
 };
