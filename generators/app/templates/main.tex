@@ -1,0 +1,23 @@
+\documentclass[a4paper, 11pt]{DOCUMENT_CLASS}
+
+\input{preamble}
+
+\title{PLACEHOLDER_TITLE}
+
+\makeatletter
+\ifthenelse{\equal{\languagename}{english}}%
+  {\date{Compiled on \today}}%
+  {\date{\today}}%
+\makeatother
+
+\begin{document}
+
+\pagenumbering{gobble}
+\maketitle\cleardoublepage
+
+\pagenumbering{roman}
+\tableofcontents\clearpage
+
+\pagenumbering{arabic}
+
+\end{document}

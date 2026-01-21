@@ -77,7 +77,7 @@ module.exports = class extends Generator {
       this.destinationPath("preamble.tex")
     );
 
-    // Set the language accordingly 
+    // Set the language accordingly
     const preamblePath = this.destinationPath("preamble.tex");
     let content = fs.readFileSync(preamblePath, "utf8");
     content = content.replace("BABEL_LANG", this.props.lang.toLowerCase());
@@ -96,6 +96,18 @@ module.exports = class extends Generator {
       fs.mkdirSync(this.destinationPath("chapters/"), { recursive: true });
     }
 
+    this.fs.copy(
+      this.templatePath("main.tex"),
+      this.destinationPath("main.tex")
+    );
+
+    let mainPath = this.destinationPath("main.tex");
+    let mainContent = fs.readFileSync(mainPath, "utf8");
+    mainContent = mainContent
+      .replace("DOCUMENT_CLASS", this.props.documentClass.toLowerCase())
+      .replace("PLACEHOLDER_TITLE", this.props.title);
+    fs.writeFileSync(mainPath, mainContent);
+
     // F: if (this.props.subtitle) { }
 
     // F: if (this.props.acronyms) { }
@@ -109,12 +121,12 @@ module.exports = class extends Generator {
       this.fs.copy(
         this.templatePath(".gitignore"),
         this.destinationPath(".gitignore")
-      )
+      );
     }
 
     this.fs.copy(
       this.templatePath("preamble.tex"),
       this.destinationPath("preamble.tex")
-    )
+    );
   }
 };
