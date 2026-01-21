@@ -22,7 +22,7 @@ module.exports = class extends Generator {
       },
       {
         type: "list",
-        name: "documentClass",
+        name: "lang",
         message: "Language:",
         choices: ["English", "Portuguese", "German"],
         default: "English"
@@ -80,7 +80,7 @@ module.exports = class extends Generator {
     // Set the language accordingly 
     const preamblePath = this.destinationPath("preamble.tex");
     let content = fs.readFileSync(preamblePath, "utf8");
-    content = content.replace("BABEL_LANG", this.props.language.toLowerCase());
+    content = content.replace("BABEL_LANG", this.props.lang.toLowerCase());
     fs.writeFileSync(preamblePath, content);
 
     fs.mkdirSync(this.destinationPath("img/"), { recursive: true });
