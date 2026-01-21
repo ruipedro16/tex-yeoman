@@ -72,6 +72,17 @@ module.exports = class extends Generator {
       this.destinationPath("dummyfile.txt")
     );
 
+    this.fs.copy(
+      this.templatePath("preamble.tex"),
+      this.destinationPath("preamble.tex")
+    );
+
+    // Set the language accordingly 
+    const preamblePath = this.destinationPath("preamble.tex");
+    let content = fs.readFileSync(preamblePath, "utf8");
+    content = content.replace("BABEL_LANG", this.props.language.toLowerCase());
+    fs.writeFileSync(preamblePath, content);
+
     fs.mkdirSync(this.destinationPath("img/"), { recursive: true });
 
     if (
