@@ -67,11 +67,20 @@ module.exports = class extends Generator {
 
     fs.mkdirSync(this.destinationPath("img/"), { recursive: true });
 
-    if (this.props.subtitle) {
+    if (
+      this.props.documentClass === "article" ||
+      this.props.documentClass === "report"
+    ) {
+      fs.mkdirSync(this.destinationPath("sections/"), { recursive: true });
     }
 
-    if (this.props.acronyms) {
+    if (this.props.documentClass === "book") {
+      fs.mkdirSync(this.destinationPath("chapters/"), { recursive: true });
     }
+
+    // if (this.props.subtitle) { }
+
+    // if (this.props.acronyms) { }
 
     if (this.props.ci) {
       this.fs.copy(
