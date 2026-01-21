@@ -108,7 +108,9 @@ module.exports = class extends Generator {
       this.templatePath("Makefile"),
       this.destinationPath("Makefile"),
       {
-        filename: "main"
+        filename: "main",
+        texinputs:
+          this.props.documentClass === "book" ? "chapters/" : "sections/"
       }
     );
 
