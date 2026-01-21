@@ -1,7 +1,6 @@
 RUBBER      := rubber
 RUBBERFLAGS := --pdf
 
-
 .PHONY: __FORCE__ 
 
 all: pdf/<%= filename %>.pdf clean

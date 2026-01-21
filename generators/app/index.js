@@ -112,8 +112,6 @@ module.exports = class extends Generator {
       }
     );
 
-    // F: if (this.props.subtitle) { }
-
     // F: if (this.props.acronyms) { }
 
     if (this.props.ci) {
@@ -127,6 +125,17 @@ module.exports = class extends Generator {
       this.fs.copy(
         this.templatePath(".gitignore"),
         this.destinationPath(".gitignore")
+      );
+    }
+
+    if (this.props.precommitHook) {
+      this.fs.copy(this.templatePath(".envrc"), this.destinationPath(".envrc"));
+
+      fs.mkdirSync(this.destinationPath("hooks/"), { recursive: true });
+
+      this.fs.copy(
+        this.templatePath("pre-commit"),
+        this.destinationPath("hooks/pre-commit")
       );
     }
   }
