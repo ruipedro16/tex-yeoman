@@ -48,6 +48,12 @@ module.exports = class extends Generator {
       /* TODO: Setup refs.bib and cryptobib */
       {
         type: "confirm",
+        name: "gitignore",
+        message: "Would you like to add a .gitignore?",
+        default: true
+      },
+      {
+        type: "confirm",
         name: "ci",
         message: "Would you like to setup CI (Github Actions)?",
         default: false
@@ -96,7 +102,18 @@ module.exports = class extends Generator {
       this.destinationPath("main.tex"),
       {
         documentClass: this.props.documentClass.toLowerCase(),
-        title: this.props.title
+        title: this.props.title,
+        subtitle: this.props.subtitle
+          ? `\\posttitle{\\par\\end{center}\\begin{center}\\large ${this.props.subtitle}\\end{center}}`
+          : ""
+      }
+    );
+
+    this.fs.copyTpl(
+      this.templatePath("Makefile"),
+      this.destinationPath("Makefile"),
+      {
+        filename: "main"
       }
     );
 
@@ -109,7 +126,9 @@ module.exports = class extends Generator {
         this.templatePath("ci.yml"),
         this.destinationPath(".github/workflows/ci.yml")
       );
+    }
 
+    if (this.props.gitignore) {
       this.fs.copy(
         this.templatePath(".gitignore"),
         this.destinationPath(".gitignore")
