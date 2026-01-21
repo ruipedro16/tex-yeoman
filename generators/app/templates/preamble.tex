@@ -33,8 +33,8 @@
 \onehalfspacing
 
 \hypersetup{
-    pdftitle={\thetitle},
-    pdfauthor={\theauthor},
+    pdftitle={\ifdefined\thetitle\thetitle\fi},
+    pdfauthor={\ifdefined\theauthor\theauthor\fi},
     bookmarksnumbered=true,
     plainpages=false,
     pdfpagelabels=false,
