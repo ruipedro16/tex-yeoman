@@ -18,5 +18,8 @@ jobs:
         with:
             submodules: true
 
-# TODO: build docker image
-# TODO: Run Make 
+      - name: Build Docker image
+        run: docker build -t latex-builder .
+
+      - name: Run Make
+        run: docker run --rm -v "${{ github.workspace }}:/workspace" latex-builder make
