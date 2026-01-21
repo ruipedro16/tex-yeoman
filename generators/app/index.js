@@ -78,9 +78,9 @@ module.exports = class extends Generator {
       fs.mkdirSync(this.destinationPath("chapters/"), { recursive: true });
     }
 
-    // if (this.props.subtitle) { }
+    // F: if (this.props.subtitle) { }
 
-    // if (this.props.acronyms) { }
+    // F: if (this.props.acronyms) { }
 
     if (this.props.ci) {
       this.fs.copy(
