@@ -141,7 +141,8 @@ module.exports = class extends Generator {
   }
 
   end() {
-    if (this.props.precommitHook)  { this.spawnCommand("direnv", ["allow"]); }
-    
+    if (this.props.precommitHook) {
+      this.spawnCommand("direnv", ["allow"]);
+    }
   }
 };
