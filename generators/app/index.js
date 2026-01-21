@@ -139,4 +139,8 @@ module.exports = class extends Generator {
       );
     }
   }
+
+  end() {
+    this.spawnCommand("direnv", ["allow"]);
+  }
 };
