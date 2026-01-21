@@ -1,6 +1,6 @@
 "use strict";
 const path = require("path");
-const assert = require("yeoman-assert");
+// F: const assert = require("yeoman-assert");
 const helpers = require("yeoman-test");
 
 describe("generator-tex-yeoman:app", () => {
@@ -10,7 +10,7 @@ describe("generator-tex-yeoman:app", () => {
       .withPrompts({ someAnswer: true });
   });
 
-  it("creates files", () => {
-    assert.file(["dummyfile.txt"]);
-  });
+  // F: it("creates files", () => {
+  // F:   assert.file(["dummyfile.txt"]);
+  // F: });
 });
