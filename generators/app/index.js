@@ -144,7 +144,18 @@ module.exports = class extends Generator {
 
   end() {
     if (this.props.precommitHook) {
-      this.spawnCommand("direnv", ["allow"]);
+      const child = this.spawnCommand("direnv", ["allow"]);
+      child.on("error", err => {
+        if (err.code === "ENOENT") {
+          this.log(
+            chalk.yellow(
+              "direnv is not installed. Install direnv and run `direnv allow` manually."
+            )
+          );
+        } else {
+          this.log(chalk.red(`Failed to run 'direnv allow': ${err.message}`));
+        }
+      });
     }
   }
 };
