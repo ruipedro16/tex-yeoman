@@ -3,7 +3,7 @@ RUBBERFLAGS := --pdf
 
 .PHONY: __FORCE__ 
 
-export TEXINPUTS := .:$(CURDIR)/<%= texinputs %>
+export TEXINPUTS := .:$(CURDIR)/<%= texinputs %>::
 
 all: pdf/<%= filename %>.pdf clean
 
