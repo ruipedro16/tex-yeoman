@@ -45,7 +45,6 @@ module.exports = class extends Generator {
         message: "Would you like to setup acronyms?",
         default: false
       },
-      /* TODO: Setup refs.bib and cryptobib */
       {
         type: "confirm",
         name: "gitRepo",
@@ -74,6 +73,18 @@ module.exports = class extends Generator {
         type: "confirm",
         name: "docker",
         message: "Would you like to add a Dockerfile and -dockerignore?",
+        default: true
+      },
+      {
+        type: "confirm",
+        name: "bib",
+        message: "Would you like to setup bibliography?",
+        default: true
+      },
+      {
+        type: "confirm",
+        name: "cryptobib",
+        message: "Would you like to add cryptobib (as a submodule)?",
         default: true
       }
     ];
@@ -165,9 +176,7 @@ module.exports = class extends Generator {
         this.templatePath("pre-commit"),
         this.destinationPath("hooks/pre-commit")
       );
-    
     }
-
 
     if (this.props.docker) {
       this.fs.copy(
@@ -179,6 +188,24 @@ module.exports = class extends Generator {
         this.templatePath("Dockerfile"),
         this.destinationPath("Dockerfile")
       );
+    }
+
+    if (this.props.bib) {
+      this.fs.copy(
+        this.templatePath("refs.bib"),
+        this.destinationPath("refs.bib")
+      );
+    }
+
+    if (this.props.cryptobib) {
+      this.spawnCommand("git", [
+        "submodule",
+        "add",
+        "https://github.com/cryptobib/export",
+        "cryptobib"
+      ]).on("error", err => {
+        this.log(chalk.red(`Failed to setup cryptobib: ${err.message}`));
+      });
     }
   }
 
