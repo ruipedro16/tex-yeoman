@@ -48,6 +48,12 @@ module.exports = class extends Generator {
       /* TODO: Setup refs.bib and cryptobib */
       {
         type: "confirm",
+        name: "gitRepo",
+        message: "Would you like to setup a git repository",
+        default: true
+      },
+      {
+        type: "confirm",
         name: "gitignore",
         message: "Would you like to add a .gitignore?",
         default: true
@@ -56,13 +62,19 @@ module.exports = class extends Generator {
         type: "confirm",
         name: "ci",
         message: "Would you like to setup CI (Github Actions)?",
-        default: false
+        default: true
       },
       {
         type: "confirm",
         name: "precommitHook",
         message: "Would you like to setup precommit hooks?",
-        default: false
+        default: true
+      },
+      {
+        type: "confirm",
+        name: "docker",
+        message: "Would you like to add a Dockerfile and -dockerignore?",
+        default: true
       }
     ];
 
@@ -116,6 +128,20 @@ module.exports = class extends Generator {
 
     // F: if (this.props.acronyms) { }
 
+    if (this.props.gitRepo) {
+      this.spawnCommand("git", ["init"]).on("error", err => {
+        if (err.code === "ENOENT") {
+          this.log(
+            chalk.yellow(
+              "git is not installed. Please install git and run `git init` manually."
+            )
+          );
+        } else {
+          this.log(chalk.red(`Failed to run 'git init': ${err.message}`));
+        }
+      });
+    }
+
     if (this.props.ci) {
       this.fs.copy(
         this.templatePath("ci.yml"),
@@ -139,13 +165,26 @@ module.exports = class extends Generator {
         this.templatePath("pre-commit"),
         this.destinationPath("hooks/pre-commit")
       );
+    
+    }
+
+
+    if (this.props.docker) {
+      this.fs.copy(
+        this.templatePath(".dockerignore"),
+        this.destinationPath(".dockerignore")
+      );
+
+      this.fs.copy(
+        this.templatePath("Dockerfile"),
+        this.destinationPath("Dockerfile")
+      );
     }
   }
 
   end() {
     if (this.props.precommitHook) {
-      const child = this.spawnCommand("direnv", ["allow"]);
-      child.on("error", err => {
+      this.spawnCommand("direnv", ["allow"]).on("error", err => {
         if (err.code === "ENOENT") {
           this.log(
             chalk.yellow(
