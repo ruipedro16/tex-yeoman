@@ -38,5 +38,23 @@ format_docker() {
     fi
 }
 
+format_yaml() {
+    YAML_FILES=$(git diff --cached --name-only | grep -E '\.(ya?ml)$')
+
+    if [ -n "$YAML_FILES" ]; then
+        echo "Staged YAML files found:"
+        echo "$YAML_FILES"
+
+        echo "$YAML_FILES" | while read -r file; do
+            nix-shell -p nodePackages.prettier --run "prettier --parser yaml --write $file"
+        done
+
+        git add $TEX_FILES
+    else
+        echo "No staged .tex files."
+    fi    
+}
+
 format_latex
 format_docker
+format_yaml
