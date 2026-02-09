@@ -1,0 +1,25 @@
+\documentclass[a4paper, 11pt]{<%= documentClass %>}
+
+\input{preamble}
+
+\title{<%= title %>}
+
+<%= subtitle %>
+
+\makeatletter
+\ifthenelse{\equal{\languagename}{english}}%
+  {\date{Compiled on \today}}%
+  {\date{\today}}%
+\makeatother
+
+\begin{document}
+
+\pagenumbering{gobble}
+\maketitle\cleardoublepage
+
+\pagenumbering{roman}
+\tableofcontents\clearpage
+
+\pagenumbering{arabic}
+
+\end{document}

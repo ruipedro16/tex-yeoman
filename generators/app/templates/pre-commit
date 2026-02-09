@@ -1,0 +1,60 @@
+#!/bin/bash
+
+if ! command -v nix-shell &> /dev/null; then
+    echo "nix-shell command not found. Exiting."
+    exit 1
+fi
+
+format_latex() {
+    TEX_FILES=$(git diff --cached --name-only | grep '\.tex$')
+    if [ -n "$TEX_FILES" ]; then
+        echo "Staged .tex files found:"
+        echo "$TEX_FILES"
+
+        echo "$TEX_FILES" | while read -r file; do
+            nix-shell -p tex-fmt --run "tex-fmt $file"
+        done
+
+        git add $TEX_FILES
+    else
+        echo "No staged .tex files."
+    fi
+}
+
+format_docker() {
+    DOCKER_FILES=$(git diff --cached --name-only | grep -E '(Dockerfile|\.dockerfile$|docker-compose\.ya?ml$)')
+    if [ -n "$DOCKER_FILES" ]; then
+        echo "Staged Docker files found:"
+        echo "$DOCKER_FILES"
+
+        echo "$DOCKER_FILES" | while read -r file; do
+            nix-shell -p dockerfmt --run "dockerfmt $file" > __$file__.tmp
+            mv __$file__.tmp $file
+        done
+        
+        git add $DOCKER_FILES
+    else
+        echo "No staged Docker files."
+    fi
+}
+
+format_yaml() {
+    YAML_FILES=$(git diff --cached --name-only | grep -E '\.(ya?ml)$')
+
+    if [ -n "$YAML_FILES" ]; then
+        echo "Staged YAML files found:"
+        echo "$YAML_FILES"
+
+        echo "$YAML_FILES" | while read -r file; do
+            nix-shell -p nodePackages.prettier --run "prettier --parser yaml --write $file"
+        done
+
+        git add $TEX_FILES
+    else
+        echo "No staged .tex files."
+    fi    
+}
+
+format_latex
+format_docker
+format_yaml

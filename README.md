@@ -17,6 +17,22 @@ Then generate your new project:
 yo tex-yeoman
 ```
 
+## Running with Docker
+
+You can also run the generator without installing Node.js or Yeoman locally by using Docker.
+
+Build the Docker image:
+
+```bash
+docker build -t tex-yeoman .
+```
+
+Run the generator (output will be saved to your current directory):
+
+```bash
+docker run -it -v $(pwd):/workspace tex-yeoman
+```
+
 ## Getting To Know Yeoman
 
 - Yeoman has a heart of gold.

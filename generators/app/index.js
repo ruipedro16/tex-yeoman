@@ -3,22 +3,88 @@ const Generator = require("yeoman-generator");
 const chalk = require("chalk");
 const yosay = require("yosay");
 
+const fs = require("fs");
+
 module.exports = class extends Generator {
   prompting() {
     // Have Yeoman greet the user.
     this.log(
-      yosay(
-        `Welcome to the striking ${chalk.red(
-          "generator-tex-yeoman"
-        )} generator!`
-      )
+      yosay(`Welcome to the striking ${chalk.red("tex-yeoman")} generator!`)
     );
 
     const prompts = [
       {
+        type: "list",
+        name: "documentClass",
+        message: "Document class:",
+        choices: ["article", "report", "book"],
+        default: "article"
+      },
+      {
+        type: "list",
+        name: "lang",
+        message: "Language:",
+        choices: ["English", "Portuguese", "German"],
+        default: "English"
+      },
+      {
+        type: "input",
+        name: "title",
+        message: "Title:",
+        default: "Title"
+      },
+      {
+        type: "input",
+        name: "subtitle",
+        message: "Subtitle:",
+        default: ""
+      },
+      {
         type: "confirm",
-        name: "someAnswer",
-        message: "Would you like to enable this option?",
+        name: "acronyms",
+        message: "Would you like to setup acronyms?",
+        default: false
+      },
+      {
+        type: "confirm",
+        name: "gitRepo",
+        message: "Would you like to setup a git repository",
+        default: true
+      },
+      {
+        type: "confirm",
+        name: "gitignore",
+        message: "Would you like to add a .gitignore?",
+        default: true
+      },
+      {
+        type: "confirm",
+        name: "ci",
+        message: "Would you like to setup CI (Github Actions)?",
+        default: true
+      },
+      {
+        type: "confirm",
+        name: "precommitHook",
+        message: "Would you like to setup precommit hooks?",
+        default: true
+      },
+      {
+        type: "confirm",
+        name: "docker",
+        message: "Would you like to add a Dockerfile and -dockerignore?",
+        default: true
+      },
+      {
+        type: "confirm",
+        name: "bib",
+        message: "Would you like to setup bibliography?",
+        default: true
+      },
+      {
+        type: "confirm",
+        name: "cryptobib",
+        message: "Would you like to add cryptobib (as a submodule)?",
         default: true
       }
     ];
@@ -30,13 +96,132 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    this.fs.copy(
-      this.templatePath("dummyfile.txt"),
-      this.destinationPath("dummyfile.txt")
+    this.fs.copyTpl(
+      this.templatePath("preamble.tex"),
+      this.destinationPath("preamble.tex"),
+      { babelLang: this.props.lang.toLowerCase() }
     );
+
+    fs.mkdirSync(this.destinationPath("img/"), { recursive: true });
+
+    if (
+      this.props.documentClass === "article" ||
+      this.props.documentClass === "report"
+    ) {
+      fs.mkdirSync(this.destinationPath("sections/"), { recursive: true });
+    }
+
+    if (this.props.documentClass === "book") {
+      fs.mkdirSync(this.destinationPath("chapters/"), { recursive: true });
+    }
+
+    this.fs.copyTpl(
+      this.templatePath("main.tex"),
+      this.destinationPath("main.tex"),
+      {
+        documentClass: this.props.documentClass.toLowerCase(),
+        title: this.props.title,
+        subtitle: this.props.subtitle
+          ? `\\posttitle{\\par\\end{center}\\begin{center}\\large ${this.props.subtitle}\\end{center}}`
+          : ""
+      }
+    );
+
+    this.fs.copyTpl(
+      this.templatePath("Makefile"),
+      this.destinationPath("Makefile"),
+      {
+        filename: "main",
+        texinputs:
+          this.props.documentClass === "book" ? "chapters/" : "sections/"
+      }
+    );
+
+    // F: if (this.props.acronyms) { }
+
+    if (this.props.gitRepo) {
+      this.spawnCommand("git", ["init"]).on("error", err => {
+        if (err.code === "ENOENT") {
+          this.log(
+            chalk.yellow(
+              "git is not installed. Please install git and run `git init` manually."
+            )
+          );
+        } else {
+          this.log(chalk.red(`Failed to run 'git init': ${err.message}`));
+        }
+      });
+    }
+
+    if (this.props.ci) {
+      this.fs.copy(
+        this.templatePath("ci.yml"),
+        this.destinationPath(".github/workflows/ci.yml")
+      );
+    }
+
+    if (this.props.gitignore) {
+      this.fs.copy(
+        this.templatePath(".gitignore"),
+        this.destinationPath(".gitignore")
+      );
+    }
+
+    if (this.props.precommitHook) {
+      this.fs.copy(this.templatePath(".envrc"), this.destinationPath(".envrc"));
+
+      fs.mkdirSync(this.destinationPath("hooks/"), { recursive: true });
+
+      this.fs.copy(
+        this.templatePath("pre-commit"),
+        this.destinationPath("hooks/pre-commit")
+      );
+    }
+
+    if (this.props.docker) {
+      this.fs.copy(
+        this.templatePath(".dockerignore"),
+        this.destinationPath(".dockerignore")
+      );
+
+      this.fs.copy(
+        this.templatePath("Dockerfile"),
+        this.destinationPath("Dockerfile")
+      );
+    }
+
+    if (this.props.bib) {
+      this.fs.copy(
+        this.templatePath("refs.bib"),
+        this.destinationPath("refs.bib")
+      );
+    }
+
+    if (this.props.cryptobib) {
+      this.spawnCommand("git", [
+        "submodule",
+        "add",
+        "https://github.com/cryptobib/export",
+        "cryptobib"
+      ]).on("error", err => {
+        this.log(chalk.red(`Failed to setup cryptobib: ${err.message}`));
+      });
+    }
   }
 
-  install() {
-    this.installDependencies();
+  end() {
+    if (this.props.precommitHook) {
+      this.spawnCommand("direnv", ["allow"]).on("error", err => {
+        if (err.code === "ENOENT") {
+          this.log(
+            chalk.yellow(
+              "direnv is not installed. Install direnv and run `direnv allow` manually."
+            )
+          );
+        } else {
+          this.log(chalk.red(`Failed to run 'direnv allow': ${err.message}`));
+        }
+      });
+    }
   }
 };

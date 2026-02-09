@@ -12,12 +12,6 @@ COPY . .
 
 RUN npm link
 
-RUN adduser -D yeoman && \
-    mkdir -p /workspace && \
-    chown -R yeoman:yeoman /workspace
-
-USER yeoman
-
 WORKDIR /workspace
 
-CMD ["yo", "tex-yeoman"]
+ENTRYPOINT ["yo", "tex-yeoman", "--allow-root"]
