@@ -49,9 +49,9 @@ format_yaml() {
             nix-shell -p nodePackages.prettier --run "prettier --parser yaml --write $file"
         done
 
-        git add $TEX_FILES
+        git add $YAML_FILES
     else
-        echo "No staged .tex files."
+        echo "No staged .yaml files."
     fi    
 }
 
