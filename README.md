@@ -30,7 +30,7 @@ docker build -t tex-yeoman .
 Run the generator (output will be saved to your current directory):
 
 ```bash
-docker run -it -v $(pwd):/workspace tex-yeoman
+docker run --user $(id -u):$(id -g) -it -v $(pwd):/workspace tex-yeoman
 ```
 
 ## Getting To Know Yeoman
