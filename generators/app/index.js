@@ -72,7 +72,7 @@ module.exports = class extends Generator {
       {
         type: "confirm",
         name: "docker",
-        message: "Would you like to add a Dockerfile and -dockerignore?",
+        message: "Would you like to add a Dockerfile and .dockerignore?",
         default: true
       },
       {
