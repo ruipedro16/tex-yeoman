@@ -1,7 +1,7 @@
-FROM debian:bookworm-slim
+FROM texlive/texlive:latest
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends texlive-full rubber make \
+    && apt-get install -y --no-install-recommends rubber make \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
