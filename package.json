@@ -17,7 +17,7 @@
     "yeoman-generator"
   ],
   "devDependencies": {
-    "yeoman-test": "^1.7.0",
+    "yeoman-test": "^11.5.2",
     "yeoman-assert": "^3.1.1",
     "eslint": "^10.0.3",
     "prettier": "^1.19.1",
@@ -30,7 +30,7 @@
     "npm": ">= 4.0.0"
   },
   "dependencies": {
-    "yeoman-generator": "^3.1.1",
+    "yeoman-generator": "^8.2.2",
     "chalk": "^2.1.0",
     "yosay": "^2.0.2"
   },
