@@ -30,7 +30,7 @@
     "npm": ">= 4.0.0"
   },
   "dependencies": {
-    "yeoman-generator": "^8.2.2",
+    "yeoman-generator": "^10.3.0",
     "chalk": "^2.1.0",
     "yosay": "^2.0.2"
   },
